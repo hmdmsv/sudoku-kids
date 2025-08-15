@@ -1,0 +1,16 @@
+.sudoku-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 3rem); /* برای جدول ۴×۴ */
+  gap: 4px;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.sudoku-cell {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  text-align: center;
+  font-size: 1.2rem;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+}
