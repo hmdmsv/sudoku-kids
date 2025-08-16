@@ -1,0 +1,21 @@
+# تنظیم پایان خط برای همه فایل‌ها
+* text=auto
+
+# اطمینان از LF برای فایل‌های کد
+*.js text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.css text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.html text eol=lf
+
+# جلوگیری از تغییر پایان خط در فایل‌های باینری
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.svg binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
