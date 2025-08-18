@@ -13,4 +13,10 @@
   font-size: 1.2rem;
   border: 1px solid #ccc;
   background-color: #f9f9f9;
+  color: #222;
+}
+
+.sudoku-cell.readonly {
+  color: #1976d2; /* آبی یا هر رنگ دلخواه */
+  background-color: #e3eafc; /* پس‌زمینه متفاوت برای سلول‌های ثابت */
 }

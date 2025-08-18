@@ -4,15 +4,15 @@ import type { Cell } from '../utils/gridUtils';
 import { generateSudokuGrid, hideSomeCells } from '../utils/sudokuGenerator';
 import './styles/SudokuGrid.css';
 
-const GRID_SIZE = 4; // جدول ۴×۴ برای کودکان
+const GRID_SIZE = 4;
 
 export const SudokuGrid = () => {
-  const [grid, setGrid] = useState<Cell[][]>(() => {
-    const fullGrid = generateSudokuGrid(GRID_SIZE);
-    return hideSomeCells(fullGrid, 0.5); // خالی کردن ۵۰٪ خانه‌ها
-  });
+  const [solution] = useState<Cell[][]>(() => generateSudokuGrid(GRID_SIZE));
+  const [grid, setGrid] = useState<Cell[][]>(() => hideSomeCells(solution, 0.6));
+  const [result, setResult] = useState<string | null>(null);
 
   const handleChange = (row: number, col: number, val: string) => {
+    if (grid[row][col].readOnly) return;
     const newGrid = grid.map(r => r.map(c => ({ ...c })));
     const num = parseInt(val);
 
@@ -25,16 +25,21 @@ export const SudokuGrid = () => {
     }
   };
 
+  const checkSudoku = () => {
+    for (let row = 0; row < GRID_SIZE; row++) {
+      for (let col = 0; col < GRID_SIZE; col++) {
+        if (grid[row][col].value !== solution[row][col].value) {
+          setResult('جدول اشتباه پر شده است!');
+          return;
+        }
+      }
+    }
+    setResult('آفرین! جدول را درست حل کردی.');
+  };
+
   return (
     <div className="inline-block p-4">
-      <div
-        className="grid gap-2"
-        style={{
-          gridTemplateColumns: `repeat(${GRID_SIZE}, 3rem)`,
-          width: 'fit-content',
-          margin: '0 auto',
-        }}
-      >
+      <div className="sudoku-grid">
         {grid.map((row, rowIndex) =>
           row.map((cell, colIndex) => (
             <input
@@ -46,15 +51,18 @@ export const SudokuGrid = () => {
               value={cell.value ?? ''}
               onChange={(e) => handleChange(rowIndex, colIndex, e.target.value)}
               disabled={cell.readOnly}
-              className={`w-12 h-12 text-center border rounded text-lg font-bold transition-colors ${
-                cell.readOnly
-                  ? 'bg-gray-200 text-gray-600'
-                  : 'bg-white focus:outline-none focus:ring-2 focus:ring-blue-400'
-              }`}
+              className={`sudoku-cell${cell.readOnly ? ' readonly' : ''}`}
             />
           ))
         )}
       </div>
+      <button
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+        onClick={checkSudoku}
+      >
+        بررسی جدول
+      </button>
+      {result && <div className="mt-2 text-lg font-bold">{result}</div>}
     </div>
   );
 };
