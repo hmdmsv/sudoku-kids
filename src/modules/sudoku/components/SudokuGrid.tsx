@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { Cell } from '../utils/gridUtils';
 import { generateSudokuGrid, hideSomeCells } from '../utils/sudokuGenerator';
 import './styles/SudokuGrid.css';
+import confetti from 'canvas-confetti';
 
 const GRID_SIZE = 4;
 
@@ -35,10 +36,16 @@ export const SudokuGrid = () => {
       }
     }
     setResult('آفرین! جدول را درست حل کردی.');
+    confetti({ // افکت هیجان‌انگیز
+      particleCount: 120,
+      spread: 80,
+      origin: { y: 0.7 }
+    });
   };
 
   return (
-    <div className="inline-block p-4">
+    <div className="sudoku-wrapper">
+      <h1 className="sudoku-title"></h1>
       <div className="sudoku-grid">
         {grid.map((row, rowIndex) =>
           row.map((cell, colIndex) => (
@@ -62,7 +69,7 @@ export const SudokuGrid = () => {
       >
         بررسی جدول
       </button>
-      {result && <div className="mt-2 text-lg font-bold">{result}</div>}
+      {result && <div className="sudoku-result">{result}</div>}
     </div>
   );
 };
