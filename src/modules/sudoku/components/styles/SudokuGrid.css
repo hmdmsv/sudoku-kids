@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /* پس‌زمینه کل صفحه */
 body {
   background: linear-gradient(135deg, #f3f7fa 0%, #d0e6fa 100%);
@@ -19,21 +18,10 @@ body {
 }
 
 /* سلول‌ها */
-=======
-.sudoku-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 3rem); /* برای جدول ۴×۴ */
-  gap: 4px;
-  max-width: 300px;
-  margin: 0 auto;
-}
-
->>>>>>> aef563bcea7b732671d132a46a0447acfc4dcb1d
 .sudoku-cell {
   width: 100%;
   aspect-ratio: 1 / 1;
   text-align: center;
-<<<<<<< HEAD
   font-size: 1.6rem;
   font-family: 'Baloo Bhaijaan 2', 'Comic Sans MS', 'Vazirmatn', cursive, sans-serif;
   border: none;
@@ -108,15 +96,4 @@ button:hover {
   font-weight: bold;
   margin-top: 18px;
   text-shadow: 0 2px 8px rgba(33,150,243,0.10);
-=======
-  font-size: 1.2rem;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
-  color: #222;
-}
-
-.sudoku-cell.readonly {
-  color: #1976d2; /* آبی یا هر رنگ دلخواه */
-  background-color: #e3eafc; /* پس‌زمینه متفاوت برای سلول‌های ثابت */
->>>>>>> aef563bcea7b732671d132a46a0447acfc4dcb1d
 }
