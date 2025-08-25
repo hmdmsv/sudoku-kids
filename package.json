@@ -10,7 +10,6 @@
     "preview": "vite preview",
     "board-importer": "tsx tools/board-importer.ts",
     "dry-run-import-check": "tsx tools/dry-run-import-check.ts"
-
   },
   "dependencies": {
     "canvas-confetti": "^1.9.3",
