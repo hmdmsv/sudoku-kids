@@ -4,15 +4,26 @@ import PuzzleSelector from './modules/sudoku/components/PuzzleSelector';
 import { Sidebar } from './modules/sudoku/components/Sidebar';
 import { StatusBar } from './modules/sudoku/components/StatusBar';
 import './App.css';
+import { TailwindTest } from './modules/sudoku/components/TailwindTest';
+import type { Difficulty } from './modules/sudoku/types/ui.types';
 
 function App() {
   const [grid, setGrid] = useState<number[][] | null>(null);
   const [size, setSize] = useState<number>(4); // پیش‌فرض ۴×۴
-  const [difficulty, setDifficulty] = useState<number>(1); // سطح سختی پیش‌فرض
+  const [difficulty, setDifficulty] = useState<Difficulty>('easy'); // سطح سختی پیش‌فرض
   const [filePath, setFilePath] = useState<string | null>(null);
   const [puzzleId, setPuzzleId] = useState<string | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
   const [logMessages, setLogMessages] = useState<string[]>([]);
+
+
+const difficultyLabels: Record<Difficulty, string> = {
+  easy: 'آسان',
+  medium: 'متوسط',
+  hard: 'سخت',
+};
+
+const level = difficulty ? difficultyLabels[difficulty] : 'نامشخص';
 
   // زمان‌سنج فقط وقتی grid وجود دارد
   useEffect(() => {
@@ -35,14 +46,14 @@ function App() {
     setElapsedSeconds(0);
     setLogMessages([
       `🧩 جدول جدید بارگذاری شد: ${selectedPuzzleId}`,
-      `📁 مسیر فایل: ${selectedFilePath}`,
-      `📐 اندازه جدول: ${selectedSize}×${selectedSize}`,
-      `🎯 سطح سختی: ${difficulty}`,
+      `📁  Database: ${selectedFilePath}`,
+      `🎯 Level: ${level}`,
     ]);
   };
 
   const filledCount = grid?.flat().filter((n) => n !== 0).length ?? 0;
   const totalCells = size * size;
+  
 
   return (
     <div className="app-wrapper min-h-screen flex flex-col bg-gray-100">
@@ -86,6 +97,8 @@ function App() {
             filledCount={filledCount}
             totalCells={totalCells}
             logMessages={logMessages}
+            level={difficulty}
+
           />
         ) : (
           <p className="text-center">🎯 لطفاً یک جدول انتخاب کنید تا بازی آغاز شود</p>
