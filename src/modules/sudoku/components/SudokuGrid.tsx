@@ -1,55 +1,127 @@
-// src/modules/sudoku/components/SudokuGrid.tsx
-import { useState } from 'react';
-import type { Cell } from '../utils/gridUtils';
-import { generateSudokuGrid, hideSomeCells } from '../utils/sudokuGenerator';
-import CheckButton from './CheckButton';
+import React, { useState, useEffect, useRef } from 'react';
 import './styles/SudokuGrid.css';
 
-const GRID_SIZE = 4;
+interface SudokuGridProps {
+  size: number;
+  puzzle: number[][];
+}
 
-export const SudokuGrid = () => {
-  const [solution] = useState<Cell[][]>(() => generateSudokuGrid(GRID_SIZE));
-  const [grid, setGrid] = useState<Cell[][]>(() => hideSomeCells(solution, 0.6));
-  const [result, setResult] = useState<string | null>(null);
+export const SudokuGrid: React.FC<SudokuGridProps> = ({ size, puzzle }) => {
+  const blockSize = size === 9 ? 3 : size === 6 ? 2 : 2;
+  const [grid, setGrid] = useState<number[][]>(puzzle.map((row) => [...row]));
+  const inputRefs = useRef<HTMLInputElement[][]>([]);
 
+  // همگام‌سازی با پازل جدید
+  useEffect(() => {
+    setGrid(puzzle.map((row) => [...row]));
+  }, [puzzle]);
+
+  // آماده‌سازی رفرنس‌ها برای فوکوس
+  useEffect(() => {
+    inputRefs.current = Array(size)
+      .fill(null)
+      .map(() => Array(size).fill(null));
+  }, [size]);
+
+  // کلاس‌های CSS برای هر خانه
+  const getCellClasses = (
+    row: number,
+    col: number,
+    isReadonly: boolean
+  ): string => {
+    const borderTop = row % blockSize === 0 && row !== 0;
+    const borderLeft = col % blockSize === 0 && col !== 0;
+
+    return [
+      'sudoku-cell',
+      isReadonly ? 'readonly' : '',
+      borderTop ? 'border-top' : '',
+      borderLeft ? 'border-left' : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
+  };
+
+  // تغییر مقدار خانه توسط کاربر
   const handleChange = (row: number, col: number, val: string) => {
-    if (grid[row][col].readOnly) return;
-    const newGrid = grid.map(r => r.map(c => ({ ...c })));
-    const num = parseInt(val);
-
-    if (!isNaN(num) && num >= 1 && num <= GRID_SIZE) {
-      newGrid[row][col].value = num;
-      setGrid(newGrid);
-    } else if (val === '') {
-      newGrid[row][col].value = null;
+    if (/^[1-9]?$/.test(val)) {
+      const newGrid = grid.map((r) => [...r]);
+      newGrid[row][col] = val === '' ? 0 : parseInt(val, 10);
       setGrid(newGrid);
     }
   };
 
+  // حرکت با کلیدهای جهت‌نما
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    row: number,
+    col: number
+  ) => {
+    const moveFocus = (r: number, c: number) => {
+      const target = inputRefs.current[r]?.[c];
+      if (target) target.focus();
+    };
+
+    switch (e.key) {
+      case 'ArrowUp':
+        if (row > 0) moveFocus(row - 1, col);
+        break;
+      case 'ArrowDown':
+        if (row < size - 1) moveFocus(row + 1, col);
+        break;
+      case 'ArrowLeft':
+        if (col > 0) moveFocus(row, col - 1);
+        break;
+      case 'ArrowRight':
+        if (col < size - 1) moveFocus(row, col + 1);
+        break;
+    }
+  };
+
+  // محاسبه تعداد خانه‌های پر شده
+  const filledCount = grid.flat().filter((n) => n !== 0).length;
+
   return (
-    <div className="sudoku-wrapper">
-      <h1 className="sudoku-title"></h1>
-      <div className="sudoku-grid">
+    <div className="sudoku-container">
+      <div
+        className="sudoku-grid"
+        style={{ gridTemplateColumns: `repeat(${size}, 2.4rem)` }}
+      >
         {grid.map((row, rowIndex) =>
-          row.map((cell, colIndex) => (
-            <input
-              key={`${rowIndex}-${colIndex}`}
-              type="text"
-              inputMode="numeric"
-              pattern="\d*"
-              maxLength={1}
-              value={cell.value ?? ''}
-              onChange={(e) => handleChange(rowIndex, colIndex, e.target.value)}
-              disabled={cell.readOnly}
-              className={`sudoku-cell${cell.readOnly ? ' readonly' : ''}`}
-            />
-          ))
+          row.map((value, colIndex) => {
+            const initialValue = puzzle[rowIndex][colIndex];
+            const isReadonly = initialValue !== 0;
+
+            return (
+              <input
+                key={`${rowIndex}-${colIndex}`}
+                type="text"
+                inputMode="numeric"
+                maxLength={1}
+                value={value === 0 ? '' : String(value)}
+                className={getCellClasses(rowIndex, colIndex, isReadonly)}
+                readOnly={isReadonly}
+                onChange={(e) =>
+                  handleChange(rowIndex, colIndex, e.target.value)
+                }
+                onKeyDown={(e) => handleKeyDown(e, rowIndex, colIndex)}
+                ref={(el) => {
+                  if (!inputRefs.current[rowIndex]) {
+                    inputRefs.current[rowIndex] = [];
+                  }
+                  inputRefs.current[rowIndex][colIndex] = el!;
+                }}
+                aria-label={`خانه ${rowIndex + 1}-${colIndex + 1}`}
+              />
+            );
+          })
         )}
       </div>
 
-      <CheckButton grid={grid} solution={solution} onResult={setResult} />
-
-      {result && <div className="sudoku-result">{result}</div>}
+      <div className="sudoku-footer">
+        🧮 تعداد خانه‌های پر شده: <strong>{filledCount}</strong> از{' '}
+        <strong>{size * size}</strong>
+      </div>
     </div>
   );
 };

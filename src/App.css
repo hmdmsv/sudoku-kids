@@ -40,3 +40,14 @@
 .read-the-docs {
   color: #888;
 }
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* تغییر از min-height به height */
+  overflow: hidden; /* جلوگیری از اسکرول اضافی */
+}
+
+.app-container {
+  padding: 1rem; /* کاهش padding کلی */
+}

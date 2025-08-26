@@ -1,10 +1,22 @@
-# dependencies
+# 📦 Dependencies
 node_modules/
 
-# build
+# 🛠️ Build output
 dist/
 
-# misc
+# 🔐 Environment variables
 .env
+
+# 🧾 Logs and system files
 *.log
 .DS_Store
+
+# 📄 Raw text puzzles (excluded from Git)
+data/**/*.txt
+
+# 🧪 Temporary or debug files
+*.tmp
+*.bak
+
+# 🖼️ Optional: exclude heavy previews or unused assets
+public/assets/services/sudoku/**/graphics/previews/

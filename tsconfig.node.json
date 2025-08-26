@@ -15,7 +15,8 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "types": ["vitest/globals"]
   },
   "include": ["vite.config.ts", "tools/**/*.ts"]
 }

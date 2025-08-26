@@ -1,99 +1,189 @@
+:root {
+  --primary-color: #1565c0;
+  --accent-color: #1976d2;
+  --bg-gradient-start: #f3f7fa;
+  --bg-gradient-end: #8cbfee;
+  --cell-bg: #f3f6fd;
+  --cell-focus-bg: #e1f5fe;
+  --readonly-bg: #e3eafc;
+  --font-main: 'Baloo Bhaijaan 2', 'Vazirmatn', 'Comic Sans MS', cursive, sans-serif;
+}
+
 /* پس‌زمینه کل صفحه */
 body {
-  background: linear-gradient(135deg, #f3f7fa 0%, #8cbfee 100%);
-  font-family: 'Baloo Bhaijaan 2', 'Comic Sans MS', 'Vazirmatn', cursive, sans-serif;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-main);
+  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* کانتینر اصلی اپلیکیشن */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  max-width: 100%;
+  min-height: 100vh;
+  justify-content: center;
+}
+
+/* عنوان بازی */
+.sudoku-title {
+  color: var(--primary-color);
+  font-size: 2.4rem;
+  font-weight: bold;
+  margin-bottom: 2.5rem;
+  text-shadow: 0 2px 8px rgba(33,150,243,0.18), 0 1px 2px #fff;
+  letter-spacing: 1px;
+  text-align: center;
 }
 
 /* جدول سودوکو */
 .sudoku-grid {
   display: grid;
-  grid-template-columns: repeat(4, 3rem);
-  gap: 10px;
-  max-width: 320px;
-  margin: 0 auto;
-  box-shadow: 0 8px 32px rgba(33, 150, 243, 0.18), 0 2px 8px rgba(0,0,0,0.08);
-  border-radius: 22px;
+  grid-template-columns: repeat(9, minmax(2rem, 1fr));
+  gap: 0.3rem;
+  padding: 12px;
   background: #fff;
-  padding: 22px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(33,150,243,0.18), 0 2px 8px rgba(0,0,0,0.08);
+  overflow-x: auto;
+  max-width: 100%;
+  justify-content: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
-/* سلول‌ها */
+/* سلول‌های سودوکو */
 .sudoku-cell {
-  width: 100%;
-  aspect-ratio: 1 / 1;
+  width: 2.4rem;
+  height: 2.4rem;
   text-align: center;
-  font-size: 1.6rem;
-  font-family: 'Baloo Bhaijaan 2', 'Comic Sans MS', 'Vazirmatn', cursive, sans-serif;
+  font-size: 1.2rem;
+  font-family: inherit;
   border: none;
-  background-color: #f3f6fd;
+  background-color: var(--cell-bg);
   color: #222;
-  margin: 0;
-  box-sizing: border-box;
-  border-radius: 14px;
-  transition: box-shadow 0.2s, background 0.2s;
+  border-radius: 10px;
   box-shadow: 0 2px 10px rgba(33,150,243,0.12);
+  transition: box-shadow 0.2s, background 0.2s;
 }
 
 /* سلول‌های قابل ویرایش */
-.sudoku-cell:not(.readonly):focus {
-  background-color: #e1f5fe;
+.sudoku-cell:focus:not(.readonly) {
+  background-color: var(--cell-focus-bg);
   box-shadow: 0 0 0 3px #81d4fa, 0 2px 10px rgba(33,150,243,0.18);
+  outline: none;
 }
 
 /* سلول‌های ثابت */
 .sudoku-cell.readonly {
-  color: #1976d2;
-  background-color: #e3eafc;
+  color: var(--accent-color);
+  background-color: var(--readonly-bg);
   font-weight: bold;
   border-radius: 14px;
   box-shadow: 0 2px 10px rgba(33,150,243,0.10);
 }
 
-/* دکمه بررسی جدول */
+/* مرزهای بلوک‌های ۳×۳ */
+.sudoku-cell.border-top {
+  border-top: 2px solid var(--primary-color);
+}
+.sudoku-cell.border-left {
+  border-left: 2px solid var(--primary-color);
+}
+
+/* دکمه‌ها */
 button {
-  margin-top: 22px;
+  margin-top: 24px;
   padding: 10px 28px;
   background: linear-gradient(90deg, #17aaee 0%, #034868 100%);
-  color: #222;
-  font-size: 1.2rem;
-  font-family: 'Baloo Bhaijaan 2', 'Comic Sans MS', 'Vazirmatn', cursive, sans-serif;
+  color: #fff;
+  font-size: 1.1rem;
+  font-family: inherit;
   border: none;
   border-radius: 12px;
   cursor: pointer;
   box-shadow: 0 4px 16px rgba(33,150,243,0.18);
   transition: background 0.2s, box-shadow 0.2s;
 }
-
 button:hover {
   background: linear-gradient(90deg, #4fc3f7 0%, #81d4fa 100%);
   box-shadow: 0 6px 24px rgba(33,150,243,0.22);
 }
 
-/* Wrapper for the Sudoku component */
-.sudoku-wrapper {
-  margin-top: 32px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Title of the Sudoku game */
-.sudoku-title {
-  color: #1565c0;
+/* پیام نتیجه بازی */
+.sudoku-result {
+  color: var(--primary-color);
   font-size: 2.6rem;
-  font-family: 'Baloo Bhaijaan 2', 'Comic Sans MS', 'Vazirmatn', cursive, sans-serif;
   font-weight: bold;
-  margin-bottom: 38px;
-  margin-top: 0;
+  margin: 18px 0 38px;
   text-shadow: 0 2px 8px rgba(33,150,243,0.18), 0 1px 2px #fff;
   letter-spacing: 1px;
+  text-align: center;
 }
 
-/* Result of the Sudoku game */
-.sudoku-result {
-  color: #1565c0; /* آبی تیره یا هر رنگ تیره مناسب */
-  font-size: 1.2rem;
+/* فرم انتخاب سایز و سطح */
+.puzzle-selector {
+  background: #ffffffcc;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(33,150,243,0.12);
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.puzzle-selector label {
+  display: block;
+  margin-bottom: 0.5rem;
   font-weight: bold;
-  margin-top: 18px;
-  text-shadow: 0 2px 8px rgba(33,150,243,0.10);
+  color: var(--primary-color);
+}
+
+.puzzle-selector select {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 1rem;
+  font-family: inherit;
+}
+
+/* خطا و دکمه تلاش مجدد */
+.error-box {
+  position: relative;
+  z-index: 100;
+}
+
+.retry-button {
+  background: none;
+  color: var(--primary-color);
+  text-decoration: underline;
+  font-size: 1rem;
+  padding: 0;
+  margin-top: 12px;
+  border: none;
+  cursor: pointer;
+}
+
+/* نوار وضعیت پایین صفحه */
+.sudoku-footer {
+  margin-top: 2rem;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #555;
+  background-color: #f9f9f9;
+  border-top: 1px solid #ddd;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
 }

@@ -24,3 +24,12 @@ export const createEmptyGrid = (size: number): Cell[][] => {
 export const cloneGrid = (grid: Cell[][]): Cell[][] => {
   return grid.map(row => row.map(cell => ({ ...cell })));
 };
+
+export function convertToCells(grid: number[][]): Cell[][] {
+  return grid.map(row =>
+    row.map(num => ({
+      value: num === 0 ? null : num,
+      readOnly: num !== 0,
+    }))
+  );
+}
